@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskJourney - Dynamic Task Timeline Dashboard</title>
+  <meta name="description" content="An interactive, vertical timeline-based task management dashboard. Organise tasks as visual milestones, track completion progress, and plan your journey.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+
+    <!-- 1. Left Sidebar Navigation -->
+    <aside class="sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 26C6 26 9.5 21.5 16 21.5C22.5 21.5 26 26 26 26" stroke="url(#logo-grad)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M16 17C19.3137 17 22 14.3137 22 11C22 7.68629 19.3137 5 16 5C12.6863 5 10 7.68629 10 11C10 14.3137 12.6863 17 16 17Z" fill="url(#logo-grad)"/>
+            <path d="M16 11L16 8M16 11L14 10M16 11L18 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="logo-grad" x1="6" y1="5" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1" />
+                <stop offset="1" stop-color="#a855f7" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="brand-name">TaskJourney</span>
+        </div>
+        <p class="brand-tagline">Chart your road to execution</p>
+      </div>
+
+      <nav class="sidebar-menu">
+        <ul>
+          <li>
+            <button class="nav-item active" data-filter="all" id="nav-dashboard">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+              <span>Dashboard</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-filter="today" id="nav-today">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Today's Tasks</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-filter="important" id="nav-important">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <span>Important</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-filter="upcoming" id="nav-upcoming">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              <span>Upcoming</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-filter="completed" id="nav-completed">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              <span>Completed</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-filter="settings" id="nav-settings">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>Settings</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar Progress Indicator -->
+      <div class="sidebar-progress-card">
+        <h4 class="progress-title">Today's Journey</h4>
+        <div class="progress-container">
+          <svg class="progress-svg" viewBox="0 0 36 36">
+            <path class="progress-bg-ring" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="progress-indicator-ring" class="progress-fill-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="progress-text-overlay">
+            <span id="progress-percentage-val">0%</span>
+          </div>
+        </div>
+        <p class="progress-message" id="progress-msg">Let's start your day!</p>
+      </div>
+    </aside>
+
+    <!-- Mobile Hamburger Menu Button -->
+    <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+
+    <!-- 2. Center Workspace (Main Content) -->
+    <main class="workspace" id="main-workspace">
+      
+      <!-- Workspace Settings View (Hidden by default, shown when active) -->
+      <section class="workspace-settings-section" id="settings-view" style="display: none;">
+        <div class="view-header">
+          <h2>Application Settings</h2>
+          <p>Customise your TaskJourney experience</p>
+        </div>
+        <div class="settings-card glass-panel">
+          <h3>Personal Details</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="settings-username">Username</label>
+              <input type="text" id="settings-username" placeholder="Explorer" value="Explorer">
+            </div>
+            <div class="form-group">
+              <label for="settings-theme">Color Theme</label>
+              <select id="settings-theme">
+                <option value="indigo-violet">Indigo & Violet Glow (Default)</option>
+                <option value="rose-amber">Rose & Amber Sunrise</option>
+                <option value="emerald-teal">Emerald & Teal Mint</option>
+                <option value="slate-dark">Monochrome Slate (Darker Mode)</option>
+              </select>
+            </div>
+          </div>
+          <hr class="settings-divider">
+          <h3>Database Administration</h3>
+          <p class="settings-description">Manage local storage cache. Resetting the app will reload mock journey tasks.</p>
+          <div class="settings-buttons">
+            <button class="btn btn-secondary" id="btn-export-data">Export JSON</button>
+            <button class="btn btn-danger" id="btn-reset-app">Reset Storage</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace Dashboard View -->
+      <section class="workspace-timeline-section" id="timeline-view">
+        
+        <!-- Header Controls -->
+        <header class="workspace-header">
+          <div class="welcome-box">
+            <h2 id="greeting-title">Hello, Explorer!</h2>
+            <p id="today-date-string" class="header-date">Monday, 6 July 2026</p>
+          </div>
+          
+          <div class="search-bar-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search-input" placeholder="Search tasks..." aria-label="Search tasks">
+          </div>
+        </header>
+
+        <!-- Filters and Sort Toolbar -->
+        <div class="toolbar glass-panel">
+          <div class="toolbar-group">
+            <span class="toolbar-label">Filters:</span>
+            <select class="toolbar-select" id="filter-category" aria-label="Filter by Category">
+              <option value="all">All Categories</option>
+              <option value="Work">💼 Work</option>
+              <option value="Personal">🏠 Personal</option>
+              <option value="Health">🍏 Health</option>
+              <option value="Finance">💰 Finance</option>
+              <option value="Other">🏷️ Other</option>
+            </select>
+
+            <select class="toolbar-select" id="filter-priority" aria-label="Filter by Priority">
+              <option value="all">All Priorities</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+
+            <select class="toolbar-select" id="filter-status" aria-label="Filter by Status">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="toolbar-group">
+            <span class="toolbar-label">Sort:</span>
+            <select class="toolbar-select" id="sort-select" aria-label="Sort Order">
+              <option value="date-asc">🗓️ Date (Earliest First)</option>
+              <option value="date-desc">🗓️ Date (Latest First)</option>
+              <option value="time-asc">⏰ Time (Earliest First)</option>
+              <option value="priority-desc">⚠️ Priority (Highest First)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Active Navigation Filter Display Badge -->
+        <div class="active-filter-banner" id="filter-banner" style="display: none;">
+          Showing: <strong id="filter-banner-text">Today's Tasks</strong>
+          <button class="clear-banner-btn" id="clear-filter-banner" aria-label="Clear active filter">✕</button>
+        </div>
+
+        <!-- Journey Timeline Area -->
+        <div class="timeline-container">
+          <!-- Central Timeline Line -->
+          <div class="timeline-spine"></div>
+          
+          <!-- Task Milestones Target -->
+          <div class="timeline-milestones" id="timeline-milestones">
+            <!-- Rendered dynamically by script.js -->
+          </div>
+
+          <!-- Empty State -->
+          <div class="timeline-empty-state" id="timeline-empty" style="display: none;">
+            <div class="empty-state-graphic">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="empty-circle"/>
+                <path d="M22 28L30 36L42 20" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="empty-check"/>
+              </svg>
+            </div>
+            <h3>No Tasks Along the Journey</h3>
+            <p>Modify your filters or hit the floating "+" button to add a new task milestone to your timeline!</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Floating Action Button for Task Creation -->
+      <button class="fab-btn" id="add-task-fab" aria-label="Add Task">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+
+    </main>
+
+    <!-- 3. Right Summary Panel -->
+    <aside class="summary-panel" id="app-summary-panel" aria-label="Productivity Summary">
+      
+      <!-- Metrics Dashboard Widgets -->
+      <div class="metrics-grid">
+        <div class="metric-card glass-panel" data-title="Total Tasks">
+          <div class="metric-header">
+            <span class="metric-label">Total</span>
+            <div class="metric-icon total">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+          <span class="metric-val" id="count-total">0</span>
+        </div>
+        <div class="metric-card glass-panel" data-title="Completed Tasks">
+          <div class="metric-header">
+            <span class="metric-label">Done</span>
+            <div class="metric-icon done">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+          </div>
+          <span class="metric-val" id="count-completed">0</span>
+        </div>
+        <div class="metric-card glass-panel" data-title="Pending Tasks">
+          <div class="metric-header">
+            <span class="metric-label">Pending</span>
+            <div class="metric-icon pending">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+          </div>
+          <span class="metric-val" id="count-pending">0</span>
+        </div>
+        <div class="metric-card glass-panel" data-title="Overdue Tasks">
+          <div class="metric-header">
+            <span class="metric-label">Overdue</span>
+            <div class="metric-icon overdue">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+          </div>
+          <span class="metric-val" id="count-overdue">0</span>
+        </div>
+      </div>
+
+      <!-- Next Deadline Widget -->
+      <div class="summary-card glass-panel" id="next-deadline-card">
+        <h4 class="card-title">Next Milestone</h4>
+        <div class="next-deadline-body">
+          <div class="deadline-details" id="deadline-details">
+            <p class="deadline-name" id="deadline-task-name">No upcoming deadlines</p>
+            <p class="deadline-time" id="deadline-task-time">-</p>
+          </div>
+          <div class="deadline-countdown-badge" id="deadline-countdown">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span id="deadline-countdown-val">N/A</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini Calendar Widget -->
+      <div class="summary-card calendar-card glass-panel">
+        <div class="calendar-header">
+          <h4 class="card-title" id="calendar-month-year">July 2026</h4>
+          <div class="calendar-arrows">
+            <button id="cal-prev" aria-label="Previous Month">‹</button>
+            <button id="cal-next" aria-label="Next Month">›</button>
+          </div>
+        </div>
+        <div class="calendar-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="calendar-days" id="calendar-days-grid">
+          <!-- Calendar Days rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Daily Motivation Card -->
+      <div class="summary-card motivation-card gradient-card">
+        <div class="motivation-content">
+          <span class="quote-symbol">“</span>
+          <p class="motivation-quote" id="motivation-quote">Loading wisdom for your journey...</p>
+          <p class="motivation-author" id="motivation-author"></p>
+        </div>
+        <button class="motivation-shuffle-btn" id="btn-shuffle-quote" aria-label="New Quote">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+        </button>
+      </div>
+
+      <!-- Upcoming Reminders Section -->
+      <div class="summary-card reminders-card glass-panel">
+        <h4 class="card-title">Reminders</h4>
+        <div class="reminders-list" id="reminders-list-box">
+          <!-- Reminders rendered dynamically -->
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- 4. Add/Edit Task Modal Dialog -->
+  <div class="modal-backdrop" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card glass-panel">
+      
+      <div class="modal-header">
+        <h3 id="modal-title">New Journey Milestone</h3>
+        <button class="modal-close-btn" id="modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="task-form" novalidate>
+        <!-- Hidden input to track editing ID -->
+        <input type="hidden" id="task-edit-id" value="">
+
+        <!-- Task Title -->
+        <div class="form-group">
+          <label for="task-name">Milestone Title <span class="required">*</span></label>
+          <input type="text" id="task-name" placeholder="E.g. Code database schema" required maxlength="80">
+          <span class="error-msg" id="err-task-name">Title is required.</span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="task-description">Milestone Details</label>
+          <textarea id="task-description" rows="3" placeholder="Provide extra context, links, or sub-tasks..." maxlength="400"></textarea>
+        </div>
+
+        <!-- Date & Time Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-date">Date <span class="required">*</span></label>
+            <input type="date" id="task-date" required>
+            <span class="error-msg" id="err-task-date">Date is required.</span>
+          </div>
+          <div class="form-group">
+            <label for="task-time">Time <span class="required">*</span></label>
+            <input type="time" id="task-time" required value="09:00">
+            <span class="error-msg" id="err-task-time">Time is required.</span>
+          </div>
+        </div>
+
+        <!-- Category & Priority Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-category">Category</label>
+            <select id="task-category">
+              <option value="Work">💼 Work</option>
+              <option value="Personal">🏠 Personal</option>
+              <option value="Health">🍏 Health</option>
+              <option value="Finance">💰 Finance</option>
+              <option value="Other" selected>🏷️ Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Estimated Duration & Reminder Toggle -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-duration">Est. Duration</label>
+            <input type="text" id="task-duration" placeholder="E.g. 1 hour, 45 mins" value="1 hour">
+          </div>
+          <div class="form-group flex-row-align">
+            <label for="task-reminder" class="checkbox-label">
+              <input type="checkbox" id="task-reminder" checked>
+              <span class="custom-switch-slider"></span>
+              <span class="switch-text">Enable Reminder Alert</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit-btn">Add to Journey</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Center -->
+  <div class="toast-container" id="toast-container" aria-live="polite">
+    <!-- Dynamic toast boxes go here -->
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
